@@ -1,52 +1,216 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Access Management Portal (AMP)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> A secure, web-based application for Aga Khan University Hospital (AKUH) designed to digitize user access requests for critical systems including EHR, PeopleSoft, and PACs.
 
-## About Laravel
+## 📋 Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The Access Management Portal (AMP) replaces manual paper-based workflows with a streamlined, auditable, and compliant digital process for managing user access to critical hospital systems. This solution provides role-based access control, multi-factor authentication, and comprehensive audit logging.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Quick Start
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Prerequisites
+- PHP 8.2+
+- Composer
+- MySQL/PostgreSQL
+- Node.js & npm (for frontend assets)
+- Laravel Valet, Sail, or XAMPP (for local development)
 
-## Learning Laravel
+### Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/benmckay/AMP.git
+   cd AMP
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Laravel Sponsors
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **Database setup**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-### Premium Partners
+5. **Build assets & run server**
+   ```bash
+   npm run dev
+   php artisan serve
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Visit `http://localhost:8000` to access the application.
 
-## Contributing
+## 🏗️ Technology Stack
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Component | Technology |
+|-----------|-----------|
+| **Backend** | Laravel 11.x with PHP 8.2+ |
+| **Frontend** | Laravel Blade, Alpine.js, Livewire |
+| **Database** | MySQL/PostgreSQL with Eloquent ORM |
+| **Authentication** | Laravel Sanctum (JWT) + 2FA |
+| **Authorization** | Spatie Laravel Permission (RBAC) |
+| **API Documentation** | L5-Swagger |
+| **Testing** | PHPUnit with Feature & Unit tests |
+| **Hosting** | AWS EC2 (App) + AWS RDS (Database) |
+| **CI/CD** | GitHub Actions |
 
-## Code of Conduct
+## 📦 Core Dependencies
+
+### Security
+- `laravel/sanctum` - JWT Authentication
+- `spatie/laravel-permission` - Role-based access control
+- `pragmarx/google2fa-laravel` - Two-Factor Authentication
+
+### Features
+- `maatwebsite/excel` - Excel export
+- `barryvdh/laravel-dompdf` - PDF generation
+- `intervention/image` - Image processing
+- `league/flysystem-aws-s3-v3` - AWS S3 integration
+
+### Development
+- `barryvdh/laravel-debugbar` - Debug toolbar
+- `laravel/telescope` - Application monitoring
+- `phpunit/phpunit` - Testing framework
+
+## 📁 Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Auth/                # Authentication
+│   │   ├── API/                 # API endpoints
+│   │   ├── Dashboard/           # Dashboard views
+│   │   └── Admin/               # Admin functions
+│   ├── Middleware/              # Custom middleware
+│   ├── Requests/                # Form validation
+│   ├── Resources/               # API resources
+│   └── Traits/                  # Reusable traits
+├── Models/                      # Eloquent models
+│   ├── User.php
+│   ├── AccessRequest.php
+│   ├── AuditLog.php
+│   └── System.php
+├── Services/                    # Business logic
+└── Providers/                   # Service providers
+database/
+├── migrations/                  # Schema migrations
+├── factories/                   # Model factories
+└── seeders/                     # Database seeders
+resources/
+├── views/                       # Blade templates
+├── css/                         # Stylesheets
+└── js/                          # JavaScript
+routes/
+├── api.php                      # API routes
+├── web.php                      # Web routes
+└── console.php                  # Console commands
+tests/
+├── Feature/                     # Feature tests
+└── Unit/                        # Unit tests
+```
+
+## 🔒 Key Features
+
+- **Secure Authentication**: JWT-based API authentication with Laravel Sanctum
+- **Two-Factor Authentication**: Google 2FA integration
+- **Role-Based Access Control**: Fine-grained permissions with Spatie
+- **Audit Logging**: Comprehensive activity tracking for compliance
+- **Multi-System Support**: Request access for EHR, PeopleSoft, PACs
+- **PDF/Excel Export**: Generate reports and documentation
+- **Real-time Notifications**: User and administrator alerts
+- **API Documentation**: Swagger/OpenAPI specification
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# All tests
+php artisan test
+
+# Feature tests only
+php artisan test --filter=Feature
+
+# Unit tests only
+php artisan test --filter=Unit
+
+# With coverage
+php artisan test --coverage
+```
+
+## 📚 Documentation
+
+For detailed technical documentation, see [claude_md_amp.md](claude_md_amp.md).
+
+## 🔄 Development Workflow
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make your changes and commit: `git commit -am 'Add feature'`
+3. Write or update tests for your changes
+4. Push to the branch: `git push origin feature/your-feature`
+5. Create a Pull Request on GitHub
+
+## 🚀 Deployment
+
+### Production Deployment
+The application is designed to run on AWS infrastructure:
+
+1. **Application Server**: AWS EC2 instance with Laravel
+2. **Database**: AWS RDS (MySQL/PostgreSQL)
+3. **Storage**: AWS S3 for file uploads
+4. **CI/CD**: GitHub Actions for automated testing and deployment
+
+See deployment configuration in your AWS console and GitHub Actions workflows.
+
+## 📝 Environment Variables
+
+Key configuration variables in `.env`:
+
+```env
+APP_NAME=AMP
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://amp.example.com
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=amp
+DB_USERNAME=postgres
+DB_PASSWORD=
+
+AWS_S3_BUCKET=amp-uploads
+AWS_REGION=us-east-1
+
+MAIL_FROM_ADDRESS=noreply@akuh.example.com
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is proprietary software for Aga Khan University Hospital.
+
+## 👥 Authors
+
+- **Ben McKay** - Initial development
+- Development team at Aga Khan University Hospital
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
