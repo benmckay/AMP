@@ -55,7 +55,7 @@ Visit `http://localhost:8000` to access the application.
 |-----------|-----------|
 | **Backend** | Laravel 11.x with PHP 8.2+ |
 | **Frontend** | Laravel Blade, Alpine.js, Livewire |
-| **Database** | MySQL/PostgreSQL with Eloquent ORM |
+| **Database** | PostgreSQL with Eloquent ORM |
 | **Authentication** | Laravel Sanctum (JWT) + 2FA |
 | **Authorization** | Spatie Laravel Permission (RBAC) |
 | **API Documentation** | L5-Swagger |
@@ -210,7 +210,7 @@ This project is proprietary software for Aga Khan University Hospital.
 ## 👥 Authors
 
 - **Ben McKay** - Initial development
-- Development team at Aga Khan University Hospital
+
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
