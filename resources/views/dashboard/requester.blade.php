@@ -126,8 +126,12 @@
                                         <strong>{{ $request->request_number }}</strong>
                                     </td>
                                     <td>
-                                        <span class="badge bg-secondary">{{ $request->template->mnemonic }}</span>
-                                        <small class="d-block text-muted">{{ $request->template->name }}</small>
+                                        @if($request->template)
+                                            <span class="badge bg-secondary">{{ $request->template->mnemonic }}</span>
+                                            <span class="text-muted ms-1">{{ $request->template->name }}</span>
+                                        @else
+                                            <span class="text-muted">N/A</span>
+                                        @endif
                                     </td>
                                     <td>{{ $request->full_name }}</td>
                                     <td>{{ $request->department->name ?? 'N/A' }}</td>

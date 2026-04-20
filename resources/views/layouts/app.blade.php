@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,171 +7,129 @@
     
     <title>{{ config('app.name', 'AMP') }} - @yield('title')</title>
     
+    <script>
+        (function() {
+            const theme = "{{ Auth::user()?->theme ?? 'system' }}";
+            const getStoredTheme = () => theme;
+            const setTargetTheme = (theme) => {
+                if (theme === 'system') {
+                    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-bs-theme', systemTheme);
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme);
+                }
+            };
+            setTargetTheme(getStoredTheme());
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme();
+                if (storedTheme === 'system') {
+                    setTargetTheme(storedTheme);
+                }
+            });
+        })();
+    </script>
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
-    <!-- Custom CSS -->
+    @stack('styles')
     <style>
         :root {
             --primary-color: #008B8B;
             --secondary-color: #20B2AA;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
         }
-        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f7fa;
+            background-color: #f8f9fa;
         }
-        
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.75rem 1rem;
         }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        
         .sidebar {
             min-height: calc(100vh - 56px);
-            background-color: #fff;
-            border-right: 1px solid #e0e0e0;
+            background: white;
+            border-right: 1px solid #dee2e6;
             padding: 1.5rem 0;
         }
-        
         .sidebar .nav-link {
-            color: #495057;
+            color: #333;
             padding: 0.75rem 1.5rem;
-            margin: 0.25rem 0;
-            border-radius: 0;
-            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
             transition: all 0.3s;
         }
-        
-        .sidebar .nav-link:hover {
-            background-color: #f8f9fa;
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: #f1f3f5;
             color: var(--primary-color);
-            border-left-color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
         }
-        
-        .sidebar .nav-link.active {
-            background-color: #e8f5f5;
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-            font-weight: 600;
-        }
-        
         .sidebar .nav-link i {
-            width: 20px;
             margin-right: 10px;
+            width: 20px;
         }
-        
         .content-wrapper {
             padding: 2rem;
         }
-        
-        .stat-card {
+        .card {
             background: white;
             border-radius: 10px;
-            padding: 1.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+        }
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
             border-left: 4px solid var(--primary-color);
-            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card .stat-value {
+        .stat-value {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--primary-color);
         }
-        
-        .stat-card .stat-label {
+        .stat-label {
             color: #6c757d;
             font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .card-header {
-            background-color: #fff;
-            border-bottom: 2px solid #f0f0f0;
-            font-weight: 600;
-            color: #495057;
-            padding: 1rem 1.5rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: #007070;
-            border-color: #007070;
-        }
-        
-        .badge {
-            padding: 0.5em 0.75em;
-            font-weight: 500;
-        }
-        
-        .table {
-            background-color: white;
-        }
-        
-        .table thead th {
-            border-bottom: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.5px;
-        }
-        
         .page-title {
             font-size: 1.75rem;
             font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
         }
-        
-        .breadcrumb {
-            background-color: transparent;
-            padding: 0;
-            margin-bottom: 1rem;
+        .badge {
+            padding: 0.4em 0.6em;
+            border-radius: 6px;
+            font-weight: 500;
         }
     </style>
-    
-    @stack('styles')
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
                 <i class="bi bi-shield-check"></i> AMP
@@ -243,6 +201,37 @@
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('submit', function(e) {
+                if (e.target.classList.contains('confirm-delete')) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const message = form.getAttribute('data-confirm') || 'Are you sure you want to delete this item? Note this action cannot be undone!';
+                    
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: message,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
     
     @stack('scripts')
 </body>

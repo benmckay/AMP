@@ -130,12 +130,12 @@
                         <div class="d-flex gap-2">
                             <button type="button" 
                                     class="btn btn-success"
-                                    onclick="approveRequest({{ $request->id }})">
+                                    onclick="approveRequest('{{ $request->id }}')">
                                 <i class="bi bi-check-circle"></i> Approve Request
                             </button>
                             <button type="button" 
                                     class="btn btn-danger"
-                                    onclick="rejectRequest({{ $request->id }})">
+                                    onclick="rejectRequest('{{ $request->id }}')">
                                 <i class="bi bi-x-circle"></i> Reject Request
                             </button>
                         </div>
@@ -152,7 +152,7 @@
                         <p>This request has been approved and is ready to be fulfilled.</p>
                         <button type="button" 
                                 class="btn btn-success"
-                                onclick="fulfillRequest({{ $request->id }})">
+                                onclick="fulfillRequest('{{ $request->id }}')">
                             <i class="bi bi-check-circle"></i> Mark as Fulfilled
                         </button>
                     </div>
@@ -252,41 +252,3 @@
         </div>
     </div>
 @endsection
-
-@push('styles')
-<style>
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 8px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #e0e0e0;
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -26px;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px #e0e0e0;
-    }
-
-    .timeline-content {
-        padding-left: 10px;
-    }
-</style>
-@endpush

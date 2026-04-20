@@ -1,4 +1,11 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "./layout.css";
+@import "./auth.css";
+@import "./requests.css";
+
+/* No need to import bootstrap here if using CDN in layout, 
+   but since we had it, let's keep it if local exists */
+/* @import 'bootstrap/dist/css/bootstrap.min.css'; */
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,4 +15,15 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    --primary-color: #008B8B;
+    --secondary-color: #20B2AA;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
 }

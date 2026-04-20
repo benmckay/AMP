@@ -8,6 +8,8 @@ use App\Models\DepartmentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -16,7 +18,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with(['roles', 'departmentAssignments.department']);
+        $query = User::with('roles')->withCount('departments');
         
         // Filter by role
         if ($request->has('role') && $request->role) {
@@ -25,8 +27,8 @@ class UserController extends Controller
         
         // Filter by department
         if ($request->has('department_id') && $request->department_id) {
-            $query->whereHas('departmentAssignments', function($q) use ($request) {
-                $q->where('department_id', $request->department_id);
+            $query->whereHas('departments', function($q) use ($request) {
+                $q->where('departments.id', $request->department_id);
             });
         }
         
@@ -49,7 +51,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::orderBy('name')->get();
+
+        return view('users.create', compact('roles'));
     }
     
     /**
@@ -90,7 +94,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['roles', 'departmentAssignments.department', 'accessRequests']);
+        $user->load(['roles', 'departments', 'accessRequests']);
         return view('users.show', compact('user'));
     }
     
@@ -99,8 +103,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load('roles');
-        return view('users.edit', compact('user'));
+        $user->load(['roles', 'departments']);
+        $roles = Role::orderBy('name')->get();
+        $departments = Department::active()->orderBy('name')->get();
+
+        return view('users.edit', compact('user', 'roles', 'departments'));
     }
     
     /**
@@ -116,6 +123,10 @@ class UserController extends Controller
             'password' => ['nullable', 'confirmed', Password::min(8)],
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,name',
+            'department_ids' => 'nullable|array',
+            'department_ids.*' => 'exists:departments,id',
+            'department_roles' => 'nullable|array',
+            'department_roles.*' => 'nullable|in:requester,approver,both',
         ]);
         
         $user->update([
@@ -130,9 +141,61 @@ class UserController extends Controller
             $user->update(['password' => Hash::make($request->password)]);
         }
         
-        // Sync roles
-        if ($request->has('roles')) {
-            $user->syncRoles($request->roles);
+        // Sync roles (empty selection removes all roles)
+        $user->syncRoles($validated['roles'] ?? []);
+
+        $selectedDepartmentIds = collect($validated['department_ids'] ?? [])
+            ->map(fn ($departmentId) => (int) $departmentId)
+            ->unique()
+            ->values();
+        $departmentRoles = $validated['department_roles'] ?? [];
+
+        $existingAssignments = DepartmentUser::where('user_id', $user->id)
+            ->get()
+            ->keyBy('department_id');
+
+        $departmentIdsToRemove = $existingAssignments->keys()->diff($selectedDepartmentIds);
+
+        if ($departmentIdsToRemove->isNotEmpty()) {
+            DepartmentUser::where('user_id', $user->id)
+                ->whereIn('department_id', $departmentIdsToRemove->all())
+                ->delete();
+        }
+
+        foreach ($selectedDepartmentIds as $departmentId) {
+            $assignment = $existingAssignments->get($departmentId);
+            $selectedRole = $departmentRoles[$departmentId] ?? $departmentRoles[(string) $departmentId] ?? 'both';
+
+            if (!in_array($selectedRole, ['requester', 'approver', 'both'], true)) {
+                $selectedRole = 'both';
+            }
+
+            if ($assignment) {
+                $assignmentUpdates = [];
+
+                if (!$assignment->is_active) {
+                    $assignmentUpdates['is_active'] = true;
+                }
+
+                if ($assignment->role !== $selectedRole) {
+                    $assignmentUpdates['role'] = $selectedRole;
+                }
+
+                if (!empty($assignmentUpdates)) {
+                    $assignment->update($assignmentUpdates);
+                }
+
+                continue;
+            }
+
+            DepartmentUser::create([
+                'user_id' => $user->id,
+                'department_id' => $departmentId,
+                'role' => $selectedRole,
+                'is_active' => true,
+                'assigned_by' => auth()->id(),
+                'assigned_at' => now(),
+            ]);
         }
         
         return redirect()->route('users.index')
@@ -175,5 +238,20 @@ class UserController extends Controller
             ->delete();
         
         return back()->with('success', 'User removed from department!');
+    }
+
+    /**
+     * Remove the specified user.
+     */
+    public function destroy(User $user)
+    {
+        if (Auth::id() === $user->id) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully!');
     }
 }

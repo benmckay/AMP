@@ -1,0 +1,180 @@
+body {
+    background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Login specific */
+.login-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.login-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.login-header {
+    background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+    color: white;
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+
+.login-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.login-body {
+    padding: 2.5rem 2rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #008B8B;
+    box-shadow: 0 0 0 0.2rem rgba(0, 139, 139, 0.15);
+}
+
+.btn-login {
+    background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+    border: none;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 10px;
+    font-weight: 600;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 139, 139, 0.3);
+}
+
+.divider {
+    text-align: center;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.divider span {
+    background: white;
+    padding: 0 10px;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+    z-index: -1;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.hospital-info {
+    text-align: center;
+    color: white;
+    margin-top: 2rem;
+    font-size: 0.875rem;
+}
+
+.hospital-info i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+/* OTP specific */
+.otp-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.otp-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.otp-header {
+    background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.otp-body {
+    padding: 2rem;
+}
+
+.otp-input {
+    text-align: center;
+    letter-spacing: 0.45rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.75rem;
+    width: 100%;
+}
+
+.btn-primary-custom:hover {
+    color: white;
+    filter: brightness(0.95);
+}
+
+.btn-link-custom {
+    color: #008B8B;
+    font-weight: 600;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.hint {
+    color: #6c757d;
+    font-size: 0.9rem;
+}

@@ -31,7 +31,7 @@
             <i class="bi bi-file-earmark-plus"></i> Request Form
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('requests.store') }}" id="requestForm" x-data="requestForm()">
+            <form method="POST" action="{{ route('requests.store') }}" id="requestForm" x-data="requestForm(@js($templatesByDepartment ?? []))">
                 @csrf
 
                 <!-- Step 1: Department and Template Selection -->
@@ -77,6 +77,9 @@
                                     <option :value="template.id" x-text="`${template.mnemonic} - ${template.name}`"></option>
                                 </template>
                             </select>
+                            <small class="text-danger d-block mt-1" x-show="selectedDepartment && templates.length === 0">
+                                No active templates are available for the selected department.
+                            </small>
                             @error('template_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -261,26 +264,33 @@
 
 @push('scripts')
 <script>
-    function requestForm() {
+    function requestForm(preloadedTemplates = {}) {
         return {
-            selectedDepartment: '',
-            selectedTemplate: '',
+            selectedDepartment: @json((string) old('department_id', '')),
+            selectedTemplate: @json((string) old('template_id', '')),
+            templatesByDepartment: preloadedTemplates,
             templates: [],
             templateDetails: null,
+
+            init() {
+                this.loadTemplates();
+                this.loadTemplateDetails();
+            },
             
             async loadTemplates() {
+                const currentTemplate = this.selectedTemplate;
+                this.templateDetails = null;
+
                 if (!this.selectedDepartment) {
                     this.templates = [];
+                    this.selectedTemplate = '';
                     return;
                 }
-                
-                try {
-                    const response = await fetch(`/api/departments/${this.selectedDepartment}/templates`);
-                    const data = await response.json();
-                    this.templates = data.data.templates;
-                } catch (error) {
-                    console.error('Error loading templates:', error);
-                }
+
+                this.templates = this.templatesByDepartment[this.selectedDepartment] ?? [];
+
+                const hasCurrentTemplate = this.templates.some(template => String(template.id) === String(currentTemplate));
+                this.selectedTemplate = hasCurrentTemplate ? currentTemplate : '';
             },
             
             async loadTemplateDetails() {
@@ -288,14 +298,8 @@
                     this.templateDetails = null;
                     return;
                 }
-                
-                try {
-                    const response = await fetch(`/api/templates/${this.selectedTemplate}`);
-                    const data = await response.json();
-                    this.templateDetails = data.data;
-                } catch (error) {
-                    console.error('Error loading template details:', error);
-                }
+
+                this.templateDetails = this.templates.find(template => String(template.id) === String(this.selectedTemplate)) ?? null;
             }
         }
     }

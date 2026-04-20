@@ -52,7 +52,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        $department->load(['templates', 'departmentUsers.user']);
+        $department->load(['templates', 'departmentUsers.roles']);
         return view('departments.show', compact('department'));
     }
 
@@ -69,6 +69,10 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
+        if ($request->boolean('_delete')) {
+            return $this->destroy($department);
+        }
+
         $validated = $request->validate([
             'code' => 'required|string|max:20|unique:departments,code,' . $department->id,
             'name' => 'required|string|max:255',
@@ -80,5 +84,20 @@ class DepartmentController extends Controller
 
         return redirect()->route('departments.index')
             ->with('success', 'Department updated successfully!');
+    }
+
+    /**
+     * Remove the specified department.
+     */
+    public function destroy(Department $department)
+    {
+        if ($department->templates()->exists()) {
+            return back()->with('error', 'Cannot delete a department that still has templates.');
+        }
+
+        $department->delete();
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department deleted successfully!');
     }
 }

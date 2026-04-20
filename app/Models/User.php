@@ -4,15 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\Auditable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +29,12 @@ class User extends Authenticatable
         'phone',
         'payroll_number',
         'department',
+        'preferred_timezone',
+        'preferred_language',
+        'theme',
+        'notify_security_alerts',
+        'notify_request_updates',
+        'notify_weekly_summary',
     ];
 
     /**
@@ -48,6 +57,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'notify_security_alerts' => 'boolean',
+            'notify_request_updates' => 'boolean',
+            'notify_weekly_summary' => 'boolean',
         ];
     }
 
@@ -69,5 +81,27 @@ class User extends Authenticatable
     public function auditLogs()
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function otpCodes()
+    {
+        return $this->hasMany(OtpCode::class);
+    }
+
+    /**
+     * Department assignment rows for this user (pivot model records).
+     */
+    public function departmentAssignments(): HasMany
+    {
+        return $this->hasMany(DepartmentUser::class, 'user_id');
+    }
+
+    /**
+     * Departments this user belongs to.
+     */
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'department_users')
+            ->withPivot(['role', 'is_active', 'assigned_by', 'assigned_at']);
     }
 }

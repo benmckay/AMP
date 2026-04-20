@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Access Management Portal</title>
     
-    <!-- Bootstrap CSS -->
+    <!-- Scripts & Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
     <style>
         body {
             background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
@@ -17,61 +20,51 @@
             align-items: center;
             justify-content: center;
             font-family: 'Inter', sans-serif;
+            margin: 0;
         }
-        
         .login-container {
             max-width: 450px;
             width: 100%;
             padding: 0 20px;
         }
-        
         .login-card {
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
-        
         .login-header {
             background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
             color: white;
             padding: 2.5rem 2rem;
             text-align: center;
         }
-        
         .login-header h1 {
             font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            color: white;
         }
-        
         .login-header p {
             margin: 0;
             opacity: 0.9;
         }
-        
         .login-body {
             padding: 2.5rem 2rem;
         }
-        
         .form-label {
             font-weight: 600;
             color: #495057;
             margin-bottom: 0.5rem;
+            display: block;
         }
-        
         .form-control {
             padding: 0.75rem 1rem;
             border-radius: 10px;
             border: 2px solid #e0e0e0;
-            transition: all 0.3s;
+            width: 100%;
+            box-sizing: border-box;
         }
-        
-        .form-control:focus {
-            border-color: #008B8B;
-            box-shadow: 0 0 0 0.2rem rgba(0, 139, 139, 0.15);
-        }
-        
         .btn-login {
             background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
             border: none;
@@ -80,27 +73,21 @@
             border-radius: 10px;
             font-weight: 600;
             width: 100%;
-            transition: transform 0.2s;
+            cursor: pointer;
+            margin-top: 1rem;
         }
-        
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 139, 139, 0.3);
-        }
-        
         .divider {
             text-align: center;
             margin: 1.5rem 0;
             position: relative;
+            z-index: 1;
         }
-        
         .divider span {
             background: white;
             padding: 0 10px;
             color: #6c757d;
             font-size: 0.875rem;
         }
-        
         .divider::before {
             content: '';
             position: absolute;
@@ -111,23 +98,11 @@
             background: #e0e0e0;
             z-index: -1;
         }
-        
-        .alert {
-            border-radius: 10px;
-            border: none;
-        }
-        
         .hospital-info {
             text-align: center;
             color: white;
             margin-top: 2rem;
             font-size: 0.875rem;
-        }
-        
-        .hospital-info i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.9;
         }
     </style>
 </head>
@@ -221,7 +196,5 @@
             <p class="mb-0"><small>Secure Access Management System</small></p>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

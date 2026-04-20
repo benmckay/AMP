@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'africastalking' => [
+        'username' => env('AFRICASTALKING_USERNAME'),
+        'api_key' => env('AFRICASTALKING_API_KEY'),
+        'from' => env('AFRICASTALKING_FROM'),
+        'otp_ttl' => env('AFRICASTALKING_OTP_TTL', 5),
+        'otp_fallback_enabled' => env('OTP_FALLBACK_ENABLED', false),
+        'verify_ssl' => env('AFRICASTALKING_VERIFY_SSL', true),
+        'ca_bundle' => env('AFRICASTALKING_CA_BUNDLE'),
+    ],
+
 ];

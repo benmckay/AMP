@@ -109,13 +109,13 @@
                                             </a>
                                             <button type="button" 
                                                     class="btn btn-sm btn-outline-success"
-                                                    onclick="approveRequest({{ $request->id }})"
+                                                    onclick="approveRequest({{ $request->id }});"
                                                     title="Approve">
                                                 <i class="bi bi-check-circle"></i>
                                             </button>
                                             <button type="button" 
                                                     class="btn btn-sm btn-outline-danger"
-                                                    onclick="rejectRequest({{ $request->id }})"
+                                                    onclick="rejectRequest({{ $request->id }});"
                                                     title="Reject">
                                                 <i class="bi bi-x-circle"></i>
                                             </button>

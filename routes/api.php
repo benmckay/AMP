@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\OtpController;
 use App\Http\Controllers\API\DepartmentController;
 use App\Http\Controllers\API\TemplateController;
 use App\Http\Controllers\API\AccessRequestController;
@@ -16,6 +17,12 @@ use App\Http\Controllers\API\AuditLogController;
 */
 
 // Public routes
+Route::prefix('otp')->middleware('throttle:10,1')->group(function () {
+    Route::post('send', [OtpController::class, 'send']);
+    Route::post('verify', [OtpController::class, 'verify']);
+    Route::post('resend', [OtpController::class, 'resend']);
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
@@ -100,7 +107,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     
     // Audit Logs (Admin and Auditor only)
-    Route::middleware(['role:admin,ict_admin,auditor'])->prefix('audit-logs')->group(function () {
+    Route::middleware(['role:admin|ict_admin|auditor'])->prefix('audit-logs')->group(function () {
         Route::get('/', [AuditLogController::class, 'index']);
         Route::get('/export', [AuditLogController::class, 'export']);
     });
